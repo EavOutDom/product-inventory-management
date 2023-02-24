@@ -1,6 +1,5 @@
 RewriteEngine On
-   
-RewriteBase /
+RewriteBase /product/api/
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^()$ index.php [NC,L]
