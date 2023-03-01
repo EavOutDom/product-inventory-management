@@ -2,11 +2,27 @@
     font-size: 20px;
     font-weight: 600;
     white-space: nowrap;
-    margin-bottom: 40px;
+    height: 64px;
+    display: flex;
+    align-items: center;
 }
 
 .layout_content {
     padding-left: var(--padding-left-width, 1);
     /* background-color: aqua; */
     transition: all 0.2s ease;
+}
+
+.layout_content_header {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 3px;
+}
+
+.layout_content_header h1 {
+    font-size: 20px;
+    font-weight: 600;
 }
