@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
 
 const Product = () => {
-    return <div>Product</div>;
+  const [setTitleLayout] = useOutletContext();
+  useEffect(() => {
+    setTitleLayout("Product");
+  }, []);
+
+  return <div>Product</div>;
 };
 
 export default Product;
