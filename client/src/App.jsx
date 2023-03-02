@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Button, ConfigProvider, Layout, Menu } from "antd";
 import styles from "./App.module.css";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { BiCategory } from "react-icons/bi";
+import { AppContext } from "./context/appContext";
 
 function getItem(label, key, icon, children) {
   return {
@@ -23,6 +24,12 @@ const items = [
 ];
 
 function App() {
+  const navigator = useNavigate();
+  const location = useLocation();
+  const {
+    appState: { is_login },
+    appDispatch,
+  } = useContext(AppContext);
   const [collapsed, setCollapsed] = useState(false);
   const [titleLayout, setTitleLayout] = useState("");
 
@@ -30,7 +37,27 @@ function App() {
     document.title = titleLayout;
   }, [titleLayout]);
 
-  const location = useLocation();
+  //   useEffect(() => {
+  //     if (is_login === null) return;
+  //     if (!is_login) {
+  //       navigator("/", { replace: true });
+  //       appDispatch({ type: "SET_LOADING", payload: false });
+  //     }
+  //     const handleLocalStorageChange = () => {
+  //       if (is_login) {
+  //         appDispatch({ type: "SET_LOGIN", payload: false });
+  //         navigator("/", { replace: true });
+  //       }
+  //     };
+  //     window.addEventListener("storage", handleLocalStorageChange);
+  //     return () =>
+  //       window.removeEventListener("storage", handleLocalStorageChange);
+  //   }, [is_login]);
+
+  const handleLogout = () => {
+    navigator("/");
+  };
+
   return (
     <Layout style={{ height: "100vh", maxHeight: "100vh" }}>
       <Layout.Sider
@@ -43,20 +70,22 @@ function App() {
           bottom: 0,
           borderRight: "1px solid #bbb",
         }}
-        width={280}
+        width={300}
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
       >
-        <h1
-          style={{
-            opacity: collapsed ? 0 : 1,
-            transition: "all 0.2s ease",
-          }}
-          className={styles.header}
-        >
-          Product management
-        </h1>
+        <div className={styles.header}>
+          <img src="/logo.svg" alt="logo" width={40} height={40} />
+          <h1
+            style={{
+              opacity: collapsed ? 0 : 1,
+              transition: "all 0.2s ease",
+            }}
+          >
+            Product management
+          </h1>
+        </div>
         <Menu
           mode="inline"
           items={items}
@@ -78,8 +107,8 @@ function App() {
         <div className={styles.layout_content_header}>
           <h1>{titleLayout}</h1>
           <div>
-            <Button type="primary" size="large">
-              Login
+            <Button type="primary" size="large" onClick={handleLogout}>
+              Logout
             </Button>
           </div>
         </div>

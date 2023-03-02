@@ -1,8 +1,22 @@
 import { Button, Card, Form, Input } from "antd";
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { AppContext } from "../../context/appContext";
 
 const LoginPage = () => {
-  const handleLogin = (value) => {};
+  const navigator = useNavigate();
+  const {
+    appState: { is_login },
+  } = useContext(AppContext);
+
+  //   useEffect(() => {
+  //     if (is_login === null) return;
+  //     if (is_login) navigator("/role", { replace: true });
+  //   }, [is_login]);
+
+  const handleLogin = (value) => {
+    navigator("/product");
+  };
 
   return (
     <div className="content_center" style={{ height: "100vh", width: "100%" }}>

@@ -1,0 +1,39 @@
+.loader {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all;
+  z-index: 99;
+  cursor: progress;
+}
+
+.loader > div {
+  height: 63px;
+  width: 63px;
+  border: 8px dotted #000;
+  border-radius: 50%;
+  border-top: 8px dotted transparent;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -7,7 +7,11 @@ const Product = () => {
     setTitleLayout("Product");
   }, []);
 
-  return <div>Product</div>;
+  return (
+    <section className="fadeIn">
+      <span>Product</span>
+    </section>
+  );
 };
 
 export default Product;
