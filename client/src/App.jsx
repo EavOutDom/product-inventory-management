@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Button, ConfigProvider, Layout, Menu } from "antd";
+import { Button, Layout, Menu } from "antd";
 import styles from "./App.module.css";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { BiCategory } from "react-icons/bi";

@@ -1,7 +1,0 @@
-RewriteEngine On
-RewriteBase /product/api/
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^()$ index.php [NC,L]
-Rewritecond %{REQUEST_URI} !(^/?.*\..*$) [NC]
-RewriteRule (.*)$ $1.php [NC]
