@@ -71,6 +71,7 @@ function App() {
                     top: 0,
                     bottom: 0,
                     borderRight: "1px solid #bbb",
+                    zIndex: 9,
                 }}
                 width={300}
                 collapsible

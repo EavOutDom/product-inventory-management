@@ -40,7 +40,6 @@ const get = async (url = "", user = null) => {
         headers.Authorization = `Bearer ${access_token}`;
     }
     try {
-        console.log(headers);
         const { data } = await axios.get(api.DOMAIN + url, { headers });
         return data;
     } catch (err) {
