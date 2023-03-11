@@ -2,29 +2,33 @@ import { Button, Card, Form, Input } from "antd";
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/appContext";
-import axios from "axios";
+import { request } from "../../util/api";
 
 const LoginPage = () => {
     const navigator = useNavigate();
     const {
         appState: { is_login },
+        appDispatch,
     } = useContext(AppContext);
 
-    //   useEffect(() => {
-    //     if (is_login === null) return;
-    //     if (is_login) navigator("/role", { replace: true });
-    //   }, [is_login]);
+    useEffect(() => {
+        if (is_login === null) return;
+        if (is_login) navigator("/product", { replace: true });
+    }, [is_login]);
 
     const handleLogin = async (value) => {
         try {
-            const res = await axios.post(
-                "http://localhost:8000/api/auth/login",
-                value
-            );
+            const res = await request.post("auth/login", value);
+            if (res.error) {
+                message.error(res.error.message);
+            } else {
+                window.localStorage.setItem("user", JSON.stringify(res));
+                appDispatch({ type: "SET_LOGIN", payload: true });
+                navigator("/product");
+            }
         } catch (error) {
             console.error(error.message);
         }
-        // navigator("/product");
     };
 
     return (

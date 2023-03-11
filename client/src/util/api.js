@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const APIURL = "http://localhost:8000";
+const APIURL = "http://localhost:8000/";
 
 export const api = {
     DOMAIN: APIURL + "api/",
@@ -15,7 +15,7 @@ const post = async (url = "", body = {}, user = null) => {
         localStorage.getItem("user") !== "undefined"
     ) {
         const { access_token } = JSON.parse(localStorage.getItem("user"));
-        headers.Authorization = access_token;
+        headers.Authorization = `Bearer + ${access_token}`;
     }
     try {
         const { data } = await axios.post(api.DOMAIN + url, body, { headers });
@@ -29,7 +29,7 @@ const post = async (url = "", body = {}, user = null) => {
     }
 };
 
-const get = async (url = "", body, user = null) => {
+const get = async (url = "", user = null) => {
     let headers = {};
     if (
         typeof window !== "undefined" &&
@@ -37,10 +37,11 @@ const get = async (url = "", body, user = null) => {
         localStorage.getItem("user") !== "undefined"
     ) {
         const { access_token } = JSON.parse(localStorage.getItem("user"));
-        headers.Authorization = "Bear " + access_token;
+        headers.Authorization = `Bearer ${access_token}`;
     }
     try {
-        const { data } = await axios.get(api.DOMAIN + url, body, { headers });
+        console.log(headers);
+        const { data } = await axios.get(api.DOMAIN + url, { headers });
         return data;
     } catch (err) {
         if (err.response && err.response.status === 401) {

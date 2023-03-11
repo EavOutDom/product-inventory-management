@@ -11,15 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string("category_id");
-            $table->integer("product_qty");
-            $table->float("unit_price");
-            $table->float("discount")->nullable();
-            $table->date("start_discount")->nullable();
-            $table->date("end_discount")->nullable();
             $table->timestamps();
         });
     }

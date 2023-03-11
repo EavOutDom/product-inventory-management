@@ -37,25 +37,27 @@ function App() {
         document.title = titleLayout;
     }, [titleLayout]);
 
-    //   useEffect(() => {
-    //     if (is_login === null) return;
-    //     if (!is_login) {
-    //       navigator("/", { replace: true });
-    //       appDispatch({ type: "SET_LOADING", payload: false });
-    //     }
-    //     const handleLocalStorageChange = () => {
-    //       if (is_login) {
-    //         appDispatch({ type: "SET_LOGIN", payload: false });
-    //         navigator("/", { replace: true });
-    //       }
-    //     };
-    //     window.addEventListener("storage", handleLocalStorageChange);
-    //     return () =>
-    //       window.removeEventListener("storage", handleLocalStorageChange);
-    //   }, [is_login]);
+    useEffect(() => {
+        if (is_login === null) return;
+        if (!is_login) {
+            navigator("/", { replace: true });
+            appDispatch({ type: "SET_LOADING", payload: false });
+        }
+        const handleLocalStorageChange = () => {
+            if (is_login) {
+                appDispatch({ type: "SET_LOGIN", payload: false });
+                navigator("/", { replace: true });
+            }
+        };
+        window.addEventListener("storage", handleLocalStorageChange);
+        return () =>
+            window.removeEventListener("storage", handleLocalStorageChange);
+    }, [is_login]);
 
     const handleLogout = () => {
         navigator("/");
+        window.localStorage.removeItem("user");
+        appDispatch({ type: "SET_LOGIN", payload: false });
     };
 
     return (
