@@ -2,6 +2,7 @@ import { Button, Card, Form, Input } from "antd";
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/appContext";
+import axios from "axios";
 
 const LoginPage = () => {
     const navigator = useNavigate();
@@ -14,8 +15,16 @@ const LoginPage = () => {
     //     if (is_login) navigator("/role", { replace: true });
     //   }, [is_login]);
 
-    const handleLogin = (value) => {
-        navigator("/product");
+    const handleLogin = async (value) => {
+        try {
+            const res = await axios.post(
+                "http://localhost:8000/api/auth/login",
+                value
+            );
+        } catch (error) {
+            console.error(error.message);
+        }
+        // navigator("/product");
     };
 
     return (
@@ -30,10 +39,25 @@ const LoginPage = () => {
                     labelCol={{ span: 24 }}
                     onFinish={handleLogin}
                 >
-                    <Form.Item label={<p>Username</p>} name="username">
-                        <Input size="large" />
+                    <Form.Item
+                        label={<p>Email</p>}
+                        name="email"
+                        rules={[
+                            { required: true, message: "email is required!" },
+                        ]}
+                    >
+                        <Input size="large" type="email" />
                     </Form.Item>
-                    <Form.Item label={<p>Password</p>} name="password">
+                    <Form.Item
+                        label={<p>Password</p>}
+                        name="password"
+                        rules={[
+                            {
+                                required: true,
+                                message: "password is required!",
+                            },
+                        ]}
+                    >
                         <Input.Password size="large" />
                     </Form.Item>
                     <Form.Item>
