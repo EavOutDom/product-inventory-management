@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Button, Image, Layout, Menu, Space, Tooltip } from "antd";
+import { Image, Layout, Menu, Space, Tooltip } from "antd";
 import styles from "./App.module.css";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { BiCategory, BiChevronDown } from "react-icons/bi";
@@ -96,7 +96,7 @@ function App() {
                     items={items}
                     style={{
                         width: "100%",
-                        marginTop: 30,
+                        marginTop: 60,
                         padding: 4,
                         background: "#f7f9fa",
                     }}
@@ -133,10 +133,10 @@ function App() {
                                             fontWeight: 600,
                                         }}
                                     >
-                                        {user.name}
+                                        {user?.name}
                                     </p>
                                     <p style={{ fontSize: 14, opacity: 0.7 }}>
-                                        {user.email}
+                                        {user?.email}
                                     </p>
                                 </div>
                                 <BiChevronDown size={18} />
@@ -144,7 +144,7 @@ function App() {
                         </>
                     </Tooltip>
                 </div>
-                <div style={{ padding: "0 4px 4px" }}>
+                <div style={{ padding: 10 }}>
                     <Outlet context={[setTitleLayout]} />
                 </div>
             </Layout.Content>

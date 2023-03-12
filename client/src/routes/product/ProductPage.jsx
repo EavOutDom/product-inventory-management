@@ -3,6 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import { request } from "../../util/api";
 import {
     Button,
+    ConfigProvider,
     DatePicker,
     Drawer,
     Form,
@@ -24,10 +25,11 @@ import {
 import { currency, discount } from "../../util/service";
 import dayjs from "dayjs";
 import { formatDateClient } from "./../../util/service";
+import ExportExcel from "./../../components/export/ExportExcel";
 
 const opts_percentage = [
     { label: "5%", value: 5 },
-    { label: "10%", label: 10 },
+    { label: "10%", value: 10 },
     { label: "15%", value: 15 },
     { label: "20%", value: 20 },
     { label: "25%", value: 25 },
@@ -53,6 +55,7 @@ const Product = () => {
     const { appDispatch } = useContext(AppContext);
     const [setTitleLayout] = useOutletContext();
     const [listProducts, setListProducts] = useState(null);
+    const [listCategories, setListCategories] = useState(null);
     const [openDrawer, setOpenDrawer] = useState(0);
     const [tmpId, setTmpId] = useState(null);
     const [loadBtn, setLoadBtn] = useState(false);
@@ -67,8 +70,11 @@ const Product = () => {
         appDispatch({ type: "SET_LOADING", payload: true });
         try {
             const res = await request.get("product/getListProducts");
-            setListProducts(await res.products);
             appDispatch({ type: "SET_LOADING", payload: false });
+            if (res) {
+                setListCategories(await res.categories);
+                setListProducts(await res.products);
+            }
         } catch (err) {
             console.error(err.message);
         }
@@ -95,6 +101,7 @@ const Product = () => {
                 const { product } = res;
                 form.setFieldsValue({
                     name: product.name,
+                    category: product.category_id,
                     product_qty: product.product_qty,
                     unit_price: product.unit_price,
                     discount: product.discount,
@@ -138,7 +145,7 @@ const Product = () => {
         setLoadBtn(true);
         let params = {
             name: value.name,
-            category_id: 1,
+            category_id: value.category,
             product_qty: value.product_qty,
             unit_price: value.unit_price,
             ...(value.discount && { discount: value.discount }),
@@ -260,7 +267,7 @@ const Product = () => {
             no: index + 1,
             name: pro.name,
             product_qty: pro.product_qty,
-            category: pro.category,
+            category: pro.get_category.name,
             unit_price: currency(pro.unit_price),
             discount: currency(pro.unit_price * (pro.discount / 100)),
             start_discount: formatDateClient(pro.start_discount),
@@ -270,6 +277,26 @@ const Product = () => {
             total_price: currency(
                 pro.unit_price - (pro.unit_price * pro.discount) / 100
             ),
+        };
+    });
+
+    const opts_categories = listCategories?.map((cate) => ({
+        label: cate.name,
+        value: cate.id,
+    }));
+
+    const excelData = dataSource?.map((data) => {
+        return {
+            No: data.no,
+            Name: data.name,
+            "Product Qty": data.product_qty,
+            Category: data.category,
+            "Unit Price": data.unit_price,
+            Discount: data.discount,
+            "Discount Percentage": data.discount_percentage,
+            "Start Discount": data.start_discount,
+            "End Discount": data.end_discount,
+            "Total Price": data.total_price,
         };
     });
 
@@ -290,9 +317,7 @@ const Product = () => {
                 >
                     Add new product
                 </Button>
-                <Button size="large" icon={<DownloadOutlined />}>
-                    Export excel
-                </Button>
+                <ExportExcel excelData={excelData} file_name="Product Report" />
             </div>
             <Table
                 dataSource={dataSource}
@@ -309,11 +334,9 @@ const Product = () => {
                     <Form
                         form={form}
                         name="basic"
-                        className="flex_col"
                         colon={false}
                         layout="vertical"
                         onFinish={handleFinish}
-                        style={{ height: "100%" }}
                     >
                         <Form.Item
                             label="Name"
@@ -339,18 +362,30 @@ const Product = () => {
                         >
                             <Input placeholder="product qty..." type="number" />
                         </Form.Item>
-                        <Form.Item
-                            label="Category"
-                            name="category"
-                            rules={[
-                                {
-                                    required: false,
-                                    message: "Please fill in category!",
+                        <ConfigProvider
+                            theme={{
+                                token: {
+                                    colorPrimaryBg: "#bbb",
                                 },
-                            ]}
+                            }}
                         >
-                            <Select placeholder="select category..." />
-                        </Form.Item>
+                            <Form.Item
+                                label="Category"
+                                name="category"
+                                labelAlign="left"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Please fill in category!",
+                                    },
+                                ]}
+                            >
+                                <Select
+                                    placeholder="select category..."
+                                    options={opts_categories}
+                                />
+                            </Form.Item>
+                        </ConfigProvider>
                         <Form.Item
                             label="Unit price ($)"
                             name="unit_price"
@@ -363,15 +398,24 @@ const Product = () => {
                         >
                             <Input placeholder="unit price...." type="number" />
                         </Form.Item>
-                        <Form.Item
-                            label="Discount Percentage (%)"
-                            name="discount"
+                        <ConfigProvider
+                            theme={{
+                                token: {
+                                    colorPrimaryBg: "#bbb",
+                                },
+                            }}
                         >
-                            <Select
-                                placeholder="select discount percentage"
-                                options={opts_percentage}
-                            />
-                        </Form.Item>
+                            <Form.Item
+                                label="Discount Percentage (%)"
+                                name="discount"
+                                labelAlign="left"
+                            >
+                                <Select
+                                    placeholder="select discount percentage"
+                                    options={opts_percentage}
+                                />
+                            </Form.Item>
+                        </ConfigProvider>
                         <Form.Item
                             style={{ flex: 1 }}
                             name="start_end_discount"
