@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Button, Layout, Menu } from "antd";
+import { Button, Image, Layout, Menu, Space, Tooltip } from "antd";
 import styles from "./App.module.css";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { BiCategory } from "react-icons/bi";
+import { BiCategory, BiChevronDown } from "react-icons/bi";
 import { AppContext } from "./context/appContext";
+import { IoMdLogOut } from "react-icons/io";
 
 function getItem(label, key, icon, children) {
     return {
@@ -60,6 +61,8 @@ function App() {
         appDispatch({ type: "SET_LOGIN", payload: false });
     };
 
+    const { user } = JSON.parse(localStorage.getItem("user")) || {};
+
     return (
         <Layout style={{ height: "100vh", maxHeight: "100vh" }}>
             <Layout.Sider
@@ -109,15 +112,38 @@ function App() {
             >
                 <div className={styles.layout_content_header}>
                     <h1>{titleLayout}</h1>
-                    <div>
-                        <Button
-                            type="primary"
-                            size="large"
-                            onClick={handleLogout}
-                        >
-                            Logout
-                        </Button>
-                    </div>
+                    <Tooltip
+                        title={
+                            <div className={styles.logout_container}>
+                                <div onClick={handleLogout}>
+                                    <IoMdLogOut />
+                                    <span>Logout</span>
+                                </div>
+                            </div>
+                        }
+                        placement="bottomLeft"
+                        color="#fff"
+                    >
+                        <>
+                            <Space style={{ cursor: "pointer" }}>
+                                <Image src="/user.png" width={40} height={40} />
+                                <div>
+                                    <p
+                                        style={{
+                                            fontSize: 18,
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        {user.name}
+                                    </p>
+                                    <p style={{ fontSize: 14, opacity: 0.7 }}>
+                                        {user.email}
+                                    </p>
+                                </div>
+                                <BiChevronDown size={18} />
+                            </Space>
+                        </>
+                    </Tooltip>
                 </div>
                 <div style={{ padding: "0 30px 30px" }}>
                     <Outlet context={[setTitleLayout]} />

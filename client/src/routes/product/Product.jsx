@@ -7,20 +7,53 @@ import {
     Drawer,
     Form,
     Input,
+    Modal,
     Select,
     Space,
     Table,
+    message,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { AppContext } from "../../context/appContext";
-import { DownloadOutlined } from "@ant-design/icons";
-import { currency } from "../../util/service";
+import {
+    DownloadOutlined,
+    EditOutlined,
+    DeleteOutlined,
+} from "@ant-design/icons";
+import { currency, discount } from "../../util/service";
+import dayjs from "dayjs";
+import { formatDateClient } from "./../../util/service";
+
+const opts_percentage = [
+    { label: "5%", value: 5 },
+    { label: "10%", label: 10 },
+    { label: "15%", value: 15 },
+    { label: "20%", value: 20 },
+    { label: "25%", value: 25 },
+    { label: "30%", value: 30 },
+    { label: "35%", value: 35 },
+    { label: "40%", value: 40 },
+    { label: "45%", value: 45 },
+    { label: "50%", value: 50 },
+    { label: "55%", value: 55 },
+    { label: "60%", value: 60 },
+    { label: "65%", value: 65 },
+    { label: "70%", value: 70 },
+    { label: "75%", value: 75 },
+    { label: "80%", value: 80 },
+    { label: "85%", value: 85 },
+    { label: "90%", value: 90 },
+    { label: "95%", value: 95 },
+    { label: "100%", value: 100 },
+];
 
 const Product = () => {
+    const [form] = Form.useForm();
     const { appDispatch } = useContext(AppContext);
     const [setTitleLayout] = useOutletContext();
     const [listProducts, setListProducts] = useState(null);
     const [openDrawer, setOpenDrawer] = useState(0);
+    const [tmpId, setTmpId] = useState(null);
 
     useEffect(() => {
         setTitleLayout("Product");
@@ -42,16 +75,101 @@ const Product = () => {
         setOpenDrawer(1);
     };
 
-    const handleCloseDrawer = () => {
+    const handleClose = () => {
         setOpenDrawer(0);
+        setOpenModal(0);
+        setTmpId(null);
+        form.resetFields();
     };
 
-    const handleEditProduct = (id) => {};
+    const handleEditProduct = async (id) => {
+        appDispatch({ type: "SET_LOADING", payload: true });
+        try {
+            const res = await request.get(`product/getProduct/${id}`);
+            appDispatch({ type: "SET_LOADING", payload: false });
+            if (res) {
+                const { product } = res;
+                form.setFieldsValue({
+                    name: product.name,
+                    product_qty: product.product_qty,
+                    unit_price: product.unit_price,
+                    discount: product.discount,
+                    start_end_discount: [
+                        dayjs(product.start_discount),
+                        dayjs(product.end_discount),
+                    ],
+                });
+                setTmpId(id);
+                setOpenDrawer(1);
+            }
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
 
-    const handleDeleteProduct = (id) => {};
+    const handleDeleteProduct = (id) => {
+        Modal.confirm({
+            title: "Delete Product",
+            content: "Are you sure you want to delete this product?",
+            okText: "Yes",
+            okType: "danger",
+            cancelText: "No",
+            onOk: async () => {
+                try {
+                    const res = await request.delete_api(
+                        `product/deleteProduct/${id}`
+                    );
+                    if (res.error) {
+                        message.error(res.message);
+                    } else {
+                        handleGetListProducts();
+                        message.success(res.message);
+                    }
+                } catch (err) {
+                    console.error(err.message);
+                }
+            },
+        });
+    };
 
     const handleFinish = async (value) => {
-        console.log(value);
+        let params = {
+            name: value.name,
+            category_id: 1,
+            product_qty: value.product_qty,
+            unit_price: value.unit_price,
+            ...(value.discount && { discount: value.discount }),
+            ...(value.start_end_discount && {
+                start_discount: dayjs(value.start_end_discount[0]).format(
+                    "YYYY-MM-DD"
+                ),
+                end_discount: dayjs(value.start_end_discount[1]).format(
+                    "YYYY-MM-DD"
+                ),
+            }),
+        };
+        try {
+            if (!tmpId) {
+                const res = await request.post("product/createProduct", params);
+                if (res) {
+                    message.success(res.message);
+                    handleGetListProducts();
+                    handleClose();
+                }
+            } else {
+                const res = await request.put(
+                    `product/updateProduct/${tmpId}`,
+                    params
+                );
+                if (res) {
+                    message.success(res.message);
+                    handleGetListProducts();
+                    handleClose();
+                }
+            }
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     const columns = [
@@ -114,13 +232,15 @@ const Product = () => {
                 <Space>
                     <Button
                         style={{ background: "#1677ff", color: "#fff" }}
-                        onClick={() => handleEditProduct(record.id)}
+                        onClick={() => handleEditProduct(record.key)}
+                        icon={<EditOutlined />}
                     >
                         Edit
                     </Button>
                     <Button
                         danger
-                        onClick={() => handleDeleteProduct(record.id)}
+                        onClick={() => handleDeleteProduct(record.key)}
+                        icon={<DeleteOutlined />}
                     >
                         Delete
                     </Button>
@@ -131,19 +251,20 @@ const Product = () => {
 
     const dataSource = listProducts?.map((pro, index) => {
         return {
-            key: index + 1,
+            key: pro.id,
             no: index + 1,
             name: pro.name,
             product_qty: pro.product_qty,
             category: pro.category,
             unit_price: currency(pro.unit_price),
-            discount: currency(pro.discount),
-            start_discount: pro.start_discount,
-            end_discount: pro.end_discount,
+            discount: currency(pro.unit_price * (pro.discount / 100)),
+            start_discount: formatDateClient(pro.start_discount),
+            end_discount: formatDateClient(pro.end_discount),
             total_price: pro.total_price,
-            discount_percentage:
-                (100 * (pro.unit_price - pro.discount)) / pro.unit_price + "%",
-            total_price: currency(pro.unit_price - pro.discount),
+            discount_percentage: discount(pro.discount),
+            total_price: currency(
+                pro.unit_price - (pro.unit_price * pro.discount) / 100
+            ),
         };
     });
 
@@ -151,7 +272,9 @@ const Product = () => {
         <section className="fadeIn">
             <div
                 align="right"
-                style={{ margin: "20px 0" }}
+                style={{
+                    margin: "20px 0",
+                }}
                 className="flex_between"
             >
                 <Button
@@ -174,9 +297,10 @@ const Product = () => {
             <Drawer
                 open={openDrawer}
                 title={`Add product`}
-                onClose={handleCloseDrawer}
+                onClose={handleClose}
             >
                 <Form
+                    form={form}
                     name="basic"
                     className="flex_col"
                     colon={false}
@@ -218,7 +342,7 @@ const Product = () => {
                         <Select placeholder="select category..." />
                     </Form.Item>
                     <Form.Item
-                        label="Unit price"
+                        label="Unit price ($)"
                         name="unit_price"
                         rules={[
                             {
@@ -229,15 +353,21 @@ const Product = () => {
                     >
                         <Input placeholder="unit price...." type="number" />
                     </Form.Item>
-                    <Form.Item label="Discount" name="discount">
-                        <Input placeholder="discount..." type="number" />
+                    <Form.Item label="Discount Percentage (%)" name="discount">
+                        <Select
+                            placeholder="select discount percentage"
+                            options={opts_percentage}
+                        />
                     </Form.Item>
                     <Form.Item
                         style={{ flex: 1 }}
                         name="start_end_discount"
                         label="Start discount - End discount"
                     >
-                        <DatePicker.RangePicker style={{ width: "100%" }} />
+                        <DatePicker.RangePicker
+                            style={{ width: "100%" }}
+                            format="DD/MM/YYYY"
+                        />
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit" block>

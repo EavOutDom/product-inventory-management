@@ -1,4 +1,4 @@
-import { Button, Card, Form, Input } from "antd";
+import { Button, Card, Form, Input, message } from "antd";
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/appContext";
@@ -20,7 +20,7 @@ const LoginPage = () => {
         try {
             const res = await request.post("auth/login", value);
             if (res.error) {
-                message.error(res.error.message);
+                message.error(res.message);
             } else {
                 window.localStorage.setItem("user", JSON.stringify(res));
                 appDispatch({ type: "SET_LOGIN", payload: true });

@@ -23,6 +23,9 @@ class ProductController extends Controller
             "category_id" => "required",
             "product_qty" => "required",
             "unit_price" => "required",
+            "discount" => "nullable",
+            "start_discount" => "nullable",
+            "end_discount" => "nullable"
         ]);
         $product = ProductModel::create($data);
         return response([

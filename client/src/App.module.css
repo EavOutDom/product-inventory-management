@@ -1,35 +1,50 @@
 .header {
-  height: 72px;
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-  box-shadow: rgba(99, 99, 99, 0.2) 0 2px 3px;
-  gap: 10px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0 2px 3px;
+    gap: 10px;
 }
 
 .header h1 {
-  font-size: 20px;
-  font-weight: 600;
-  white-space: nowrap;
+    font-size: 20px;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 .layout_content {
-  padding-left: var(--padding-left-width, 1);
-  transition: all 0.2s ease;
-  background-color: #f7f9fa;
+    padding-left: var(--padding-left-width, 1);
+    transition: all 0.2s ease;
+    background-color: #f7f9fa;
 }
 
 .layout_content_header {
-  height: 72px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 30px;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 3px;
-  background: #fff;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 3px;
+    background: #fff;
 }
 
 .layout_content_header h1 {
-  font-size: 20px;
-  font-weight: 600;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.logout_container {
+    color: #000;
+    width: 200px;
+    padding: 2px;
+}
+
+.logout_container > div {
+    display: flex;
+    align-items: center;
+    gap: 4;
+    background-color: #f7f9fa;
+    padding: 8px;
+    cursor: pointer;
 }

@@ -1,3 +1,4 @@
+import { message } from "antd";
 import axios from "axios";
 
 const APIURL = "http://localhost:8000/";
@@ -15,7 +16,7 @@ const post = async (url = "", body = {}, user = null) => {
         localStorage.getItem("user") !== "undefined"
     ) {
         const { access_token } = JSON.parse(localStorage.getItem("user"));
-        headers.Authorization = `Bearer + ${access_token}`;
+        headers.Authorization = `Bearer ${access_token}`;
     }
     try {
         const { data } = await axios.post(api.DOMAIN + url, body, { headers });
@@ -24,6 +25,7 @@ const post = async (url = "", body = {}, user = null) => {
         if (err.response && err.response.status === 401) {
             window.localStorage.removeItem("user");
         }
+        message.error(err.response.data.message);
         console.error("Error from api: ", err.message);
         throw err;
     }
@@ -59,12 +61,16 @@ const delete_api = async (url = "", body, user = null) => {
         localStorage.getItem("user") !== "undefined"
     ) {
         const { access_token } = JSON.parse(localStorage.getItem("user"));
-        headers.Authorization = access_token;
+        headers.Authorization = `Bearer ${access_token}`;
     }
     try {
-        const { data } = await axios.delete(api.DOMAIN + url, body, {
-            headers,
-        });
+        const { data } = await axios.delete(
+            api.DOMAIN + url,
+            {
+                headers,
+            },
+            body
+        );
         return data;
     } catch (err) {
         if (err.response && err.response.status === 401) {
@@ -83,7 +89,7 @@ const put = async (url = "", body, user = null) => {
         localStorage.getItem("user") !== "undefined"
     ) {
         const { access_token } = JSON.parse(localStorage.getItem("user"));
-        headers.Authorization = access_token;
+        headers.Authorization = `Bearer ${access_token}`;
     }
     try {
         const { data } = await axios.put(api.DOMAIN + url, body, { headers });
@@ -97,4 +103,4 @@ const put = async (url = "", body, user = null) => {
     }
 };
 
-export const request = { post, get, delete_api };
+export const request = { post, get, delete_api, put };
