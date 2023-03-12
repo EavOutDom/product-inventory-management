@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CategoryModel;
 use App\Models\ProductModel;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     public function getListProducts() {
-        $products = ProductModel::all();
-        return response(["products"=>$products]);
+        $products = ProductModel::with("getCategory")->get();
+        $listCategories = CategoryModel::all();
+        return response(["products"=>$products, "categories"=>$listCategories]);
     }
 
     public function getProduct($id) {
