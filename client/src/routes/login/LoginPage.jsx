@@ -1,11 +1,12 @@
 import { Button, Card, Form, Input, message } from "antd";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/appContext";
 import { request } from "../../util/api";
 
 const LoginPage = () => {
     const navigator = useNavigate();
+    const [loadBtn, setLoadBtn] = useState(false);
     const {
         appState: { is_login },
         appDispatch,
@@ -17,8 +18,10 @@ const LoginPage = () => {
     }, [is_login]);
 
     const handleLogin = async (value) => {
+        setLoadBtn(true);
         try {
             const res = await request.post("auth/login", value);
+            setLoadBtn(true);
             if (res.error) {
                 message.error(res.message);
             } else {
@@ -70,6 +73,7 @@ const LoginPage = () => {
                             type="primary"
                             block
                             size="large"
+                            loading={loadBtn}
                         >
                             Login
                         </Button>

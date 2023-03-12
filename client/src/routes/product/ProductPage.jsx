@@ -10,6 +10,7 @@ import {
     Modal,
     Select,
     Space,
+    Spin,
     Table,
     message,
 } from "antd";
@@ -54,6 +55,8 @@ const Product = () => {
     const [listProducts, setListProducts] = useState(null);
     const [openDrawer, setOpenDrawer] = useState(0);
     const [tmpId, setTmpId] = useState(null);
+    const [loadBtn, setLoadBtn] = useState(false);
+    const [loadDrawer, setLoadDrawer] = useState(false);
 
     useEffect(() => {
         setTitleLayout("Product");
@@ -77,16 +80,17 @@ const Product = () => {
 
     const handleClose = () => {
         setOpenDrawer(0);
-        setOpenModal(0);
         setTmpId(null);
         form.resetFields();
     };
 
     const handleEditProduct = async (id) => {
-        appDispatch({ type: "SET_LOADING", payload: true });
+        setTmpId(id);
+        setOpenDrawer(1);
+        setLoadDrawer(true);
         try {
             const res = await request.get(`product/getProduct/${id}`);
-            appDispatch({ type: "SET_LOADING", payload: false });
+            setLoadDrawer(false);
             if (res) {
                 const { product } = res;
                 form.setFieldsValue({
@@ -99,8 +103,6 @@ const Product = () => {
                         dayjs(product.end_discount),
                     ],
                 });
-                setTmpId(id);
-                setOpenDrawer(1);
             }
         } catch (err) {
             console.error(err.message);
@@ -133,6 +135,7 @@ const Product = () => {
     };
 
     const handleFinish = async (value) => {
+        setLoadBtn(true);
         let params = {
             name: value.name,
             category_id: 1,
@@ -151,6 +154,7 @@ const Product = () => {
         try {
             if (!tmpId) {
                 const res = await request.post("product/createProduct", params);
+                setLoadBtn(false);
                 if (res) {
                     message.success(res.message);
                     handleGetListProducts();
@@ -161,6 +165,7 @@ const Product = () => {
                     `product/updateProduct/${tmpId}`,
                     params
                 );
+                setLoadBtn(false);
                 if (res) {
                     message.success(res.message);
                     handleGetListProducts();
@@ -293,88 +298,102 @@ const Product = () => {
                 dataSource={dataSource}
                 columns={columns}
                 pagination={false}
+                size="small"
             />
             <Drawer
                 open={openDrawer}
-                title={`Add product`}
+                headerStyle={{ display: "none" }}
                 onClose={handleClose}
             >
-                <Form
-                    form={form}
-                    name="basic"
-                    className="flex_col"
-                    colon={false}
-                    layout="vertical"
-                    onFinish={handleFinish}
-                    style={{ height: "100%" }}
-                >
-                    <Form.Item
-                        label="Name"
-                        name="name"
-                        rules={[
-                            { required: true, message: "Please fill in name!" },
-                        ]}
+                <Spin spinning={loadDrawer}>
+                    <Form
+                        form={form}
+                        name="basic"
+                        className="flex_col"
+                        colon={false}
+                        layout="vertical"
+                        onFinish={handleFinish}
+                        style={{ height: "100%" }}
                     >
-                        <Input placeholder="name..." />
-                    </Form.Item>
-                    <Form.Item
-                        label="Product Quantity"
-                        name="product_qty"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please fill in product quantity!",
-                            },
-                        ]}
-                    >
-                        <Input placeholder="product qty..." type="number" />
-                    </Form.Item>
-                    <Form.Item
-                        label="Category"
-                        name="category"
-                        rules={[
-                            {
-                                required: false,
-                                message: "Please fill in category!",
-                            },
-                        ]}
-                    >
-                        <Select placeholder="select category..." />
-                    </Form.Item>
-                    <Form.Item
-                        label="Unit price ($)"
-                        name="unit_price"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please fill in unit price!",
-                            },
-                        ]}
-                    >
-                        <Input placeholder="unit price...." type="number" />
-                    </Form.Item>
-                    <Form.Item label="Discount Percentage (%)" name="discount">
-                        <Select
-                            placeholder="select discount percentage"
-                            options={opts_percentage}
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        style={{ flex: 1 }}
-                        name="start_end_discount"
-                        label="Start discount - End discount"
-                    >
-                        <DatePicker.RangePicker
-                            style={{ width: "100%" }}
-                            format="DD/MM/YYYY"
-                        />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" block>
-                            Add product
-                        </Button>
-                    </Form.Item>
-                </Form>
+                        <Form.Item
+                            label="Name"
+                            name="name"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please fill in name!",
+                                },
+                            ]}
+                        >
+                            <Input placeholder="name..." />
+                        </Form.Item>
+                        <Form.Item
+                            label="Product Quantity"
+                            name="product_qty"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please fill in product quantity!",
+                                },
+                            ]}
+                        >
+                            <Input placeholder="product qty..." type="number" />
+                        </Form.Item>
+                        <Form.Item
+                            label="Category"
+                            name="category"
+                            rules={[
+                                {
+                                    required: false,
+                                    message: "Please fill in category!",
+                                },
+                            ]}
+                        >
+                            <Select placeholder="select category..." />
+                        </Form.Item>
+                        <Form.Item
+                            label="Unit price ($)"
+                            name="unit_price"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please fill in unit price!",
+                                },
+                            ]}
+                        >
+                            <Input placeholder="unit price...." type="number" />
+                        </Form.Item>
+                        <Form.Item
+                            label="Discount Percentage (%)"
+                            name="discount"
+                        >
+                            <Select
+                                placeholder="select discount percentage"
+                                options={opts_percentage}
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            style={{ flex: 1 }}
+                            name="start_end_discount"
+                            label="Start discount - End discount"
+                        >
+                            <DatePicker.RangePicker
+                                style={{ width: "100%" }}
+                                format="DD/MM/YYYY"
+                            />
+                        </Form.Item>
+                        <Form.Item>
+                            <Button
+                                loading={loadBtn}
+                                type="primary"
+                                htmlType="submit"
+                                block
+                            >
+                                {tmpId ? "Update product" : "Add product"}
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Spin>
             </Drawer>
         </section>
     );

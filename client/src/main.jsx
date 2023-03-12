@@ -10,8 +10,8 @@ import {
 import App from "./App";
 import LoginPage from "./routes/login/LoginPage";
 import ErrorPage from "./routes/error/ErrorPage";
-import Product from "./routes/product/Product";
-import Category from "./routes/category/Category";
+import ProductPage from "./routes/product/ProductPage";
+import CategoryPage from "./routes/category/CategoryPage";
 import { ConfigProvider } from "antd";
 import AppContextProvider from "./context/appContext";
 import Loader from "./components/loader/Loader";
@@ -27,8 +27,8 @@ const router = createBrowserRouter(
                 <Route path="/login" element={<LoginPage />} />
             </Route>
             <Route errorElement={<ErrorPage />} element={<App />}>
-                <Route path="/product" index element={<Product />} />
-                <Route path="/category" element={<Category />} />
+                <Route path="/product" index element={<ProductPage />} />
+                <Route path="/category" element={<CategoryPage />} />
             </Route>
         </>
     )

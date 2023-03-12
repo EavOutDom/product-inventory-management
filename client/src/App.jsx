@@ -76,21 +76,20 @@ function App() {
                     borderRight: "1px solid #bbb",
                     zIndex: 9,
                 }}
-                width={300}
                 collapsible
                 collapsed={collapsed}
                 onCollapse={(value) => setCollapsed(value)}
             >
                 <div className={styles.header}>
                     <img src="/logo.svg" alt="logo" width={40} height={40} />
-                    <h1
+                    <h4
                         style={{
                             opacity: collapsed ? 0 : 1,
                             transition: "all 0.2s ease",
                         }}
                     >
                         Inventory management
-                    </h1>
+                    </h4>
                 </div>
                 <Menu
                     mode="inline"
@@ -107,7 +106,7 @@ function App() {
             <Layout.Content
                 className={styles.layout_content}
                 style={{
-                    "--padding-left-width": collapsed ? "80px" : "280px",
+                    "--padding-left-width": collapsed ? "80px" : "200px",
                 }}
             >
                 <div className={styles.layout_content_header}>
@@ -145,7 +144,7 @@ function App() {
                         </>
                     </Tooltip>
                 </div>
-                <div style={{ padding: "0 30px 30px" }}>
+                <div style={{ padding: "0 4px 4px" }}>
                     <Outlet context={[setTitleLayout]} />
                 </div>
             </Layout.Content>
