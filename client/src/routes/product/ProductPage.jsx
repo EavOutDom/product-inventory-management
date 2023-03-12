@@ -17,11 +17,7 @@ import {
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { AppContext } from "../../context/appContext";
-import {
-    DownloadOutlined,
-    EditOutlined,
-    DeleteOutlined,
-} from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { currency, discount } from "../../util/service";
 import dayjs from "dayjs";
 import { formatDateClient } from "./../../util/service";
@@ -383,6 +379,12 @@ const Product = () => {
                                 <Select
                                     placeholder="select category..."
                                     options={opts_categories}
+                                    showSearch
+                                    filterOption={(input, option) =>
+                                        (option?.label ?? "")
+                                            .toLowerCase()
+                                            .includes(input.toLowerCase())
+                                    }
                                 />
                             </Form.Item>
                         </ConfigProvider>
@@ -413,6 +415,12 @@ const Product = () => {
                                 <Select
                                     placeholder="select discount percentage"
                                     options={opts_percentage}
+                                    showSearch
+                                    filterOption={(input, option) =>
+                                        (option?.label ?? "")
+                                            .toLowerCase()
+                                            .includes(input.toLowerCase())
+                                    }
                                 />
                             </Form.Item>
                         </ConfigProvider>

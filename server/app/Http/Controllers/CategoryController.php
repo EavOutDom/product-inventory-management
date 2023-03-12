@@ -9,7 +9,7 @@ class CategoryController extends Controller
 {
     public function getListCategories() {
         $categories = CategoryModel::all();
-        return response(["category"=>$categories]);
+        return response(["categories"=>$categories]);
     }
 
     public function getCategory($id) {
