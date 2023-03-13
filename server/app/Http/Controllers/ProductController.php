@@ -8,6 +8,15 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    public function index () {
+        $product = ProductModel::count();
+        $categories = CategoryModel::count();
+        return response([
+            "products" => $product,
+            "categories" => $categories
+        ]);
+    }
+
     public function getListProducts() {
         $products = ProductModel::with("getCategory")->get();
         $listCategories = CategoryModel::all();
