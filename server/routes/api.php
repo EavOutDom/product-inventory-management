@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,4 +41,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("/customer/createCustomer", [CustomerController::class, "createCustomer"]);
     Route::delete("/customer/deleteCustomer/{id}", [CustomerController::class, "deleteCustomer"]);
     Route::put("/category/updateCategory/{id}", [CustomerController::class, "updateCustomer"]);
+
+    Route::get("/supplier/getListSuppliers", [SupplierController::class, "getListSuppliers"]);
+    Route::get("/supplier/getSupplier/{id}", [SupplierController::class, "getSupplier"]);
+    Route::post("/supplier/createSupplier", [SupplierController::class, "createSupplier"]);
+    Route::delete("/supplier/deleteSupplier/{id}", [SupplierController::class, "deleteSupplier"]);
+    Route::put("/supplier/updateSupplier/{id}", [SupplierController::class, "updateSupplier"]);
 });
