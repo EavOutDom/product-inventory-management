@@ -97,7 +97,7 @@ const Product = () => {
                 const { product } = res;
                 form.setFieldsValue({
                     name: product.name,
-                    category: product.category_id,
+                    category: Number(product.category_id),
                     product_qty: product.product_qty,
                     unit_price: product.unit_price,
                     discount: product.discount,
@@ -263,7 +263,7 @@ const Product = () => {
             no: index + 1,
             name: pro.name,
             product_qty: pro.product_qty,
-            category: pro.get_category.name,
+            category: pro.get_category?.name,
             unit_price: currency(pro.unit_price),
             discount: currency(pro.unit_price * (pro.discount / 100)),
             start_discount: formatDateClient(pro.start_discount),
