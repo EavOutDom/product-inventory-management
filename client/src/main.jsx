@@ -17,6 +17,8 @@ import AppContextProvider from "./context/appContext";
 import Loader from "./components/loader/Loader";
 import CustomerPage from "./routes/customer/CustomerPage";
 import SupplierPage from "./routes/Supplier/SupplierPage";
+import UserSystemPage from "./routes/user/UserSystemPage";
+import DashboardPage from "./routes/dashboard/DashboardPage";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -29,10 +31,12 @@ const router = createBrowserRouter(
                 <Route path="/login" element={<LoginPage />} />
             </Route>
             <Route errorElement={<ErrorPage />} element={<App />}>
+                <Route path="/dashboard" index element={<DashboardPage />} />
                 <Route path="/product" index element={<ProductPage />} />
                 <Route path="/category" element={<CategoryPage />} />
                 <Route path="/customer" element={<CustomerPage />} />
                 <Route path="/supplier" element={<SupplierPage />} />
+                <Route path="/user" element={<UserSystemPage />} />
             </Route>
         </>
     )

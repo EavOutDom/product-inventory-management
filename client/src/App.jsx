@@ -3,11 +3,12 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Image, Layout, Menu, Space, Tooltip } from "antd";
 import styles from "./App.module.css";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { BiCategory, BiChevronDown } from "react-icons/bi";
+import { BiCategory, BiChevronDown, BiHomeAlt } from "react-icons/bi";
 import { AppContext } from "./context/appContext";
 import { IoMdLogOut } from "react-icons/io";
 import { BsPeopleFill } from "react-icons/bs";
 import { FaPeopleCarry } from "react-icons/fa";
+import { RiUserSettingsLine } from "react-icons/ri";
 
 function getItem(label, key, icon, children) {
     return {
@@ -18,6 +19,11 @@ function getItem(label, key, icon, children) {
     };
 }
 const items = [
+    getItem(
+        <Link to="/dashboard">Dashboard</Link>,
+        "/dashboard",
+        <BiHomeAlt />
+    ),
     getItem(
         <Link to="/product">Product</Link>,
         "/product",
@@ -33,6 +39,11 @@ const items = [
         <Link to="/supplier">Supplier</Link>,
         "/supplier",
         <FaPeopleCarry />
+    ),
+    getItem(
+        <Link to="/user">User System</Link>,
+        "/user",
+        <RiUserSettingsLine />
     ),
 ];
 
@@ -113,6 +124,7 @@ function App() {
                         background: "#f7f9fa",
                     }}
                     defaultSelectedKeys={[location.pathname]}
+                    selectedKeys={[location.pathname]}
                 />
             </Layout.Sider>
             <Layout.Content

@@ -7,54 +7,61 @@ import { request } from "../../util/api";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { formatDateClient } from "./../../util/service";
 
-const CategoryPage = () => {
+const UserSystemPage = () => {
     const [setTitleLayout] = useOutletContext();
     const { appDispatch } = useContext(AppContext);
-    const [listCategories, setListCategories] = useState(null);
+    const [listUsers, setListUsers] = useState(null);
     const [openModal, setOpenModal] = useState(0);
-    const [inputName, setInputName] = useState("");
+    const [input, setInput] = useState({});
     const [loadBtn, setLoadBtn] = useState(false);
     const [tmpId, setTempId] = useState(null);
 
     useEffect(() => {
-        setTitleLayout("Category");
-        handleGetCategory();
+        setTitleLayout("User System");
+        handleGetListUsers();
     }, []);
 
-    const handleGetCategory = async () => {
+    const handleGetListUsers = async () => {
         appDispatch({ type: "SET_LOADING", payload: true });
         try {
-            const res = await request.get("category/getListCategories");
+            const res = await request.get("user/getListUsers");
             appDispatch({ type: "SET_LOADING", payload: false });
             if (res) {
-                setListCategories(await res.categories);
+                setListUsers(await res.users);
             }
         } catch (err) {
             console.error(err.message);
         }
     };
 
-    const onClickAddCategory = () => {
+    const onClickAddUsers = () => {
         setOpenModal(1);
     };
 
-    const handleChangeName = (e) => {
-        setInputName(e.target.value);
+    const handleChangeInput = (e) => {
+        const { name, value } = e.target;
+        setInput((pre) => ({
+            ...pre,
+            [name]: value,
+        }));
     };
 
     const handleCloseModal = () => {
         setOpenModal(0);
-        setInputName("");
+        setInput({});
         setTempId(null);
     };
 
-    const handleUpdateCategory = (id, name) => {
+    const handleUpdateUser = (id, name, email) => {
         setOpenModal(1);
-        setInputName(name);
         setTempId(id);
+        setInput((pre) => ({
+            name,
+            email,
+        }));
     };
 
-    const handleDeleteCategory = (id) => {
+    const handleDeleteUser = (id) => {
         Modal.confirm({
             title: "Are you sure?",
             content: "You won't be able to revert this!",
@@ -64,13 +71,13 @@ const CategoryPage = () => {
             onOk: async () => {
                 try {
                     const res = await request.delete_api(
-                        `category/deleteCategory/${id}`
+                        `user/deleteUser/${id}`
                     );
                     if (res.error) {
                         message.error(res.message);
                     } else {
                         message.success(res.message);
-                        handleGetCategory();
+                        handleGetListUsers();
                     }
                 } catch (err) {
                     console.error(err.message);
@@ -83,28 +90,25 @@ const CategoryPage = () => {
         setLoadBtn(true);
         try {
             if (!tmpId) {
-                const res = await request.post("category/createCategory", {
-                    name: inputName,
+                const res = await request.post("user/createUser", {
+                    ...input,
                 });
                 setLoadBtn(false);
                 if (res) {
                     message.success(res.message);
-                    handleGetCategory();
+                    handleGetListUsers();
                     handleCloseModal();
                 } else if (res.error) {
                     message.error(res.message);
                 }
             } else {
-                const res = await request.put(
-                    `category/updateCategory/${tmpId}`,
-                    {
-                        name: inputName,
-                    }
-                );
+                const res = await request.put(`user/updateUser/${tmpId}`, {
+                    ...input,
+                });
                 setLoadBtn(false);
                 if (res) {
                     message.success(res.message);
-                    handleGetCategory();
+                    handleGetListUsers();
                     handleCloseModal();
                 } else if (res.error) {
                     message.error(res.message);
@@ -128,6 +132,11 @@ const CategoryPage = () => {
             key: "name",
         },
         {
+            title: "Email",
+            dataIndex: "email",
+            key: "email",
+        },
+        {
             title: "Created at",
             dataIndex: "created_at",
             key: "created_at",
@@ -147,7 +156,11 @@ const CategoryPage = () => {
                     <Button
                         style={{ background: "#1677ff", color: "#fff" }}
                         onClick={() =>
-                            handleUpdateCategory(record.key, record.name)
+                            handleUpdateUser(
+                                record.key,
+                                record.name,
+                                record.email
+                            )
                         }
                         icon={<EditOutlined />}
                     >
@@ -155,7 +168,7 @@ const CategoryPage = () => {
                     </Button>
                     <Button
                         danger
-                        onClick={() => handleDeleteCategory(record.key)}
+                        onClick={() => handleDeleteUser(record.key)}
                         icon={<DeleteOutlined />}
                     >
                         Delete
@@ -165,11 +178,12 @@ const CategoryPage = () => {
         },
     ];
 
-    const dataSource = listCategories?.map((cate, index) => {
+    const dataSource = listUsers?.map((cate, index) => {
         return {
             key: cate.id,
             no: index + 1,
             name: cate.name,
+            email: cate.email,
             created_at: formatDateClient(cate.created_at),
             updated_at: formatDateClient(cate.updated_at),
         };
@@ -187,10 +201,10 @@ const CategoryPage = () => {
                 <Button
                     size="large"
                     type="primary"
-                    onClick={onClickAddCategory}
+                    onClick={onClickAddUsers}
                     icon={<PlusOutlined />}
                 >
-                    Add new category
+                    Add new user
                 </Button>
             </div>
             <Table
@@ -200,7 +214,7 @@ const CategoryPage = () => {
                 size="small"
             />
             <Modal
-                title="Add category"
+                title="Add user"
                 open={openModal}
                 onCancel={handleCloseModal}
                 onOk={handleFinish}
@@ -208,15 +222,37 @@ const CategoryPage = () => {
                 okText="Save"
                 cancelText="Cancel"
             >
-                <label htmlFor="">Name</label>
-                <Input
-                    value={inputName}
-                    onChange={handleChangeName}
-                    placeholder="name..."
-                />
+                <Space direction="vertical" style={{ width: "100%" }}>
+                    <label htmlFor="">Name</label>
+                    <Input
+                        name="name"
+                        value={input.name}
+                        onChange={handleChangeInput}
+                        placeholder="name..."
+                    />
+                    <label htmlFor="">Email</label>
+                    <Input
+                        type="email"
+                        name="email"
+                        value={input.email}
+                        onChange={handleChangeInput}
+                        placeholder="email..."
+                    />
+                    {!tmpId && (
+                        <>
+                            <label htmlFor="">Password</label>
+                            <Input.Password
+                                name="password"
+                                value={input.password}
+                                onChange={handleChangeInput}
+                                placeholder="email..."
+                            />
+                        </>
+                    )}
+                </Space>
             </Modal>
         </section>
     );
 };
 
-export default CategoryPage;
+export default UserSystemPage;

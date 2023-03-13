@@ -3,17 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\CategoryModel;
+use App\Models\CustomerModel;
 use App\Models\ProductModel;
+use App\Models\SupplierModel;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     public function index () {
-        $product = ProductModel::count();
+        $products = ProductModel::count();
         $categories = CategoryModel::count();
+        $customers = CustomerModel::count();
+        $suppliers = SupplierModel::count();
+        $users = User::count();
         return response([
-            "products" => $product,
-            "categories" => $categories
+            "products" => $products,
+            "categories" => $categories,
+            "customers" => $customers,
+            "suppliers" => $suppliers,
+            "users" => $users
         ]);
     }
 
