@@ -26,6 +26,10 @@ span {
     font-size: 16px;
 }
 
+textarea {
+    resize: none !important;
+}
+
 .content_center {
     display: flex;
     justify-content: center;

@@ -40,7 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get("/customer/getCustomer/{id}", [CustomerController::class, "getCustomer"]);
     Route::post("/customer/createCustomer", [CustomerController::class, "createCustomer"]);
     Route::delete("/customer/deleteCustomer/{id}", [CustomerController::class, "deleteCustomer"]);
-    Route::put("/category/updateCategory/{id}", [CustomerController::class, "updateCustomer"]);
+    Route::put("/customer/updateCustomer/{id}", [CustomerController::class, "updateCustomer"]);
 
     Route::get("/supplier/getListSuppliers", [SupplierController::class, "getListSuppliers"]);
     Route::get("/supplier/getSupplier/{id}", [SupplierController::class, "getSupplier"]);

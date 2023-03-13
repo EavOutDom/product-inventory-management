@@ -15,6 +15,7 @@ import CategoryPage from "./routes/category/CategoryPage";
 import { ConfigProvider } from "antd";
 import AppContextProvider from "./context/appContext";
 import Loader from "./components/loader/Loader";
+import CustomerPage from "./routes/customer/CustomerPage";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -29,6 +30,7 @@ const router = createBrowserRouter(
             <Route errorElement={<ErrorPage />} element={<App />}>
                 <Route path="/product" index element={<ProductPage />} />
                 <Route path="/category" element={<CategoryPage />} />
+                <Route path="/customer" element={<CustomerPage />} />
             </Route>
         </>
     )

@@ -6,6 +6,7 @@ import { AiOutlineShoppingCart } from "react-icons/ai";
 import { BiCategory, BiChevronDown } from "react-icons/bi";
 import { AppContext } from "./context/appContext";
 import { IoMdLogOut } from "react-icons/io";
+import { BsPeopleFill } from "react-icons/bs";
 
 function getItem(label, key, icon, children) {
     return {
@@ -22,6 +23,11 @@ const items = [
         <AiOutlineShoppingCart />
     ),
     getItem(<Link to="/category">Category</Link>, "/category", <BiCategory />),
+    getItem(
+        <Link to="/customer">Customer</Link>,
+        "/customer",
+        <BsPeopleFill />
+    ),
 ];
 
 function App() {
