@@ -24,7 +24,7 @@ const Category = () => {
     const handleGetCategory = async () => {
         appDispatch({ type: "SET_LOADING", payload: true });
         try {
-            const res = await request.get("product/getListCategories");
+            const res = await request.get("category/getListCategories");
             appDispatch({ type: "SET_LOADING", payload: false });
             if (res) {
                 setListCategories(await res.categories);
@@ -64,7 +64,7 @@ const Category = () => {
             onOk: async () => {
                 try {
                     const res = await request.delete_api(
-                        `product/deleteCategory/${id}`
+                        `category/deleteCategory/${id}`
                     );
                     if (res.error) {
                         message.error(res.message);
@@ -83,7 +83,7 @@ const Category = () => {
         setLoadBtn(true);
         try {
             if (!tmpId) {
-                const res = await request.post("product/createCategory", {
+                const res = await request.post("category/createCategory", {
                     name: inputName,
                 });
                 setLoadBtn(false);
@@ -96,7 +96,7 @@ const Category = () => {
                 }
             } else {
                 const res = await request.put(
-                    `product/updateCategory/${tmpId}`,
+                    `category/updateCategory/${tmpId}`,
                     {
                         name: inputName,
                     }
