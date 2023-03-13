@@ -14,22 +14,23 @@ const LoginPage = () => {
 
     useEffect(() => {
         if (is_login === null) return;
-        if (is_login) navigator("/product", { replace: true });
+        if (is_login) navigator("/dashboard", { replace: true });
     }, [is_login]);
 
     const handleLogin = async (value) => {
         setLoadBtn(true);
         try {
             const res = await request.post("auth/login", value);
-            setLoadBtn(true);
+            setLoadBtn(false);
             if (res.error) {
                 message.error(res.message);
             } else {
                 window.localStorage.setItem("user", JSON.stringify(res));
                 appDispatch({ type: "SET_LOGIN", payload: true });
-                navigator("/product");
+                navigator("/dashboard");
             }
         } catch (error) {
+            setLoadBtn(false);
             console.error(error.message);
         }
     };
