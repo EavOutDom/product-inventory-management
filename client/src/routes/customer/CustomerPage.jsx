@@ -270,7 +270,7 @@ const CustomerPage = () => {
                             <Input placeholder="telephone..." />
                         </Form.Item>
                         <Form.Item label="Email" name="email">
-                            <Input placeholder="email...." />
+                            <Input placeholder="email...." type="email" />
                         </Form.Item>
                         <Form.Item
                             label="Address"

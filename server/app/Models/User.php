@@ -31,8 +31,11 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'email_verified_at'
     ];
 
+    protected $table = 'users';
+    protected $guarded = ["id"];
     /**
      * The attributes that should be cast.
      *
