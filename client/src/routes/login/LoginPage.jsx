@@ -14,7 +14,7 @@ const LoginPage = () => {
 
     useEffect(() => {
         if (is_login === null) return;
-        if (is_login) navigator("/product", { replace: true });
+        if (is_login) navigator("/dashboard", { replace: true });
     }, [is_login]);
 
     const handleLogin = async (value) => {
@@ -27,7 +27,7 @@ const LoginPage = () => {
             } else {
                 window.localStorage.setItem("user", JSON.stringify(res));
                 appDispatch({ type: "SET_LOGIN", payload: true });
-                navigator("/product");
+                navigator("/dashboard");
             }
         } catch (error) {
             console.error(error.message);
