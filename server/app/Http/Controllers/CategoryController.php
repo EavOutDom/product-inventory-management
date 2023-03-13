@@ -30,15 +30,15 @@ class CategoryController extends Controller
     public function deleteCategory ($id){
         $category = CategoryModel::find($id);
         if(!$category) {
-            return response(["error" => true, "message" => "Product not found"]);
+            return response(["error" => true, "message" => "Category not found"]);
         }
         $category->delete();
-        return response(["error" => false, "message" => "Delete product successfully"]);
+        return response(["error" => false, "message" => "Delete category successfully"]);
     }
 
     public function updateCategory(Request $req, $id){
         $category = CategoryModel::find($id);
-        if(!$category) return response(["error" => true, "message" => "Product not found"]);
+        if(!$category) return response(["error" => true, "message" => "Category not found"]);
         $category->update($req->all());
         return response(["error" => false, "message" => "Update successful"]);
     }

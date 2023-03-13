@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,4 +35,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete("/category/deleteCategory/{id}", [CategoryController::class, "deleteCategory"]);
     Route::put("/category/updateCategory/{id}", [CategoryController::class, "updateCategory"]);
 
+    Route::get("/customer/getListCustomers", [CustomerController::class, "getListCustomers"]);
+    Route::get("/customer/getCustomer/{id}", [CustomerController::class, "getCustomer"]);
+    Route::post("/customer/createCustomer", [CustomerController::class, "createCustomer"]);
+    Route::delete("/customer/deleteCustomer/{id}", [CustomerController::class, "deleteCustomer"]);
+    Route::put("/category/updateCategory/{id}", [CustomerController::class, "updateCustomer"]);
 });
