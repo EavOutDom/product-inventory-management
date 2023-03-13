@@ -51,6 +51,7 @@ const Product = () => {
     const { appDispatch } = useContext(AppContext);
     const [setTitleLayout] = useOutletContext();
     const [listProducts, setListProducts] = useState(null);
+    const [filterProducts, setFilterProducts] = useState(null);
     const [listCategories, setListCategories] = useState(null);
     const [openDrawer, setOpenDrawer] = useState(0);
     const [tmpId, setTmpId] = useState(null);
@@ -70,6 +71,7 @@ const Product = () => {
             if (res) {
                 setListCategories(await res.categories);
                 setListProducts(await res.products);
+                setFilterProducts(await res.products);
             }
         } catch (err) {
             console.error(err.message);
@@ -296,6 +298,14 @@ const Product = () => {
         };
     });
 
+    const handleFilterProducts = (e) => {
+        let value = e.target.value.toLowerCase();
+        let result = filterProducts?.filter((data) => {
+            return data.name.toLowerCase().search(value) != -1;
+        });
+        setListProducts(result);
+    };
+
     return (
         <section className="fadeIn">
             <div
@@ -305,21 +315,27 @@ const Product = () => {
                 }}
                 className="flex_between"
             >
-                <Button
-                    size="large"
-                    type="primary"
-                    onClick={onClickAddProduct}
-                    icon={<PlusOutlined />}
-                >
-                    Add new product
-                </Button>
+                <Space size={"large"}>
+                    <Button
+                        type="primary"
+                        onClick={onClickAddProduct}
+                        icon={<PlusOutlined />}
+                    >
+                        Add new product
+                    </Button>
+                    <Input
+                        size="large"
+                        placeholder="Search product..."
+                        onChange={handleFilterProducts}
+                    />
+                </Space>
                 <ExportExcel excelData={excelData} file_name="Product Report" />
             </div>
             <Table
-                dataSource={dataSource}
-                columns={columns}
                 pagination={false}
                 size="small"
+                dataSource={dataSource}
+                columns={columns}
             />
             <Drawer
                 open={openDrawer}

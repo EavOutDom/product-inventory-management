@@ -21,6 +21,7 @@ const CustomerPage = () => {
     const [form] = Form.useForm();
     const { appDispatch } = useContext(AppContext);
     const [listCustomers, setListCustomers] = useState(null);
+    const [filterCustomers, setFilterCustomers] = useState(null);
     const [setTitleLayout] = useOutletContext();
     const [openDrawer, setOpenDrawer] = useState(0);
     const [loadDrawer, setLoadDrawer] = useState(false);
@@ -39,6 +40,7 @@ const CustomerPage = () => {
             appDispatch({ type: "SET_LOADING", payload: false });
             if (res) {
                 setListCustomers(res.customers);
+                setFilterCustomers(res.customers);
             }
         } catch (err) {
             console.error(err.message);
@@ -205,6 +207,14 @@ const CustomerPage = () => {
         };
     });
 
+    const handleFilterProducts = (e) => {
+        let value = e.target.value.toLowerCase();
+        let result = filterCustomers?.filter((data) => {
+            return data.name.toLowerCase().search(value) != -1;
+        });
+        setListCustomers(result);
+    };
+
     return (
         <section className="fadeIn">
             <div
@@ -213,14 +223,21 @@ const CustomerPage = () => {
                 }}
                 className="flex_between"
             >
-                <Button
-                    size="large"
-                    type="primary"
-                    onClick={onClickAddCustomer}
-                    icon={<PlusOutlined />}
-                >
-                    Add new customer
-                </Button>
+                <Space size="large">
+                    <Button
+                        size="large"
+                        type="primary"
+                        onClick={onClickAddCustomer}
+                        icon={<PlusOutlined />}
+                    >
+                        Add new customer
+                    </Button>
+                    <Input
+                        size="large"
+                        placeholder="Search customer..."
+                        onChange={handleFilterProducts}
+                    />
+                </Space>
                 <ExportExcel
                     excelData={excelData}
                     file_name="Customer Report"

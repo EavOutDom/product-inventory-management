@@ -21,6 +21,7 @@ const SupplierPage = () => {
     const [form] = Form.useForm();
     const { appDispatch } = useContext(AppContext);
     const [listSuppliers, setListSuppliers] = useState(null);
+    const [filterSuppliers, setFilterSuppliers] = useState(null);
     const [setTitleLayout] = useOutletContext();
     const [openDrawer, setOpenDrawer] = useState(0);
     const [loadDrawer, setLoadDrawer] = useState(false);
@@ -39,6 +40,7 @@ const SupplierPage = () => {
             appDispatch({ type: "SET_LOADING", payload: false });
             if (res) {
                 setListSuppliers(res.suppliers);
+                setFilterSuppliers(res.suppliers);
             }
         } catch (err) {
             console.error(err.message);
@@ -205,6 +207,14 @@ const SupplierPage = () => {
         };
     });
 
+    const handleFilterSupplier = (e) => {
+        let value = e.target.value.toLowerCase();
+        let result = filterSuppliers?.filter((data) => {
+            return data.name.toLowerCase().search(value) != -1;
+        });
+        setListSuppliers(result);
+    };
+
     return (
         <section className="fadeIn">
             <div
@@ -213,14 +223,21 @@ const SupplierPage = () => {
                 }}
                 className="flex_between"
             >
-                <Button
-                    size="large"
-                    type="primary"
-                    onClick={onClickAddSupplier}
-                    icon={<PlusOutlined />}
-                >
-                    Add new supplier
-                </Button>
+                <Space size="large">
+                    <Button
+                        size="large"
+                        type="primary"
+                        onClick={onClickAddSupplier}
+                        icon={<PlusOutlined />}
+                    >
+                        Add new supplier
+                    </Button>
+                    <Input
+                        size="large"
+                        placeholder="Search supplier..."
+                        onChange={handleFilterSupplier}
+                    />
+                </Space>
                 <ExportExcel
                     excelData={excelData}
                     file_name="Supplier Report"

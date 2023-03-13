@@ -11,6 +11,7 @@ const CategoryPage = () => {
     const [setTitleLayout] = useOutletContext();
     const { appDispatch } = useContext(AppContext);
     const [listCategories, setListCategories] = useState(null);
+    const [filterCategories, setFilterCategories] = useState(null);
     const [openModal, setOpenModal] = useState(0);
     const [inputName, setInputName] = useState("");
     const [loadBtn, setLoadBtn] = useState(false);
@@ -28,6 +29,7 @@ const CategoryPage = () => {
             appDispatch({ type: "SET_LOADING", payload: false });
             if (res) {
                 setListCategories(await res.categories);
+                setFilterCategories(await res.categories);
             }
         } catch (err) {
             console.error(err.message);
@@ -175,6 +177,14 @@ const CategoryPage = () => {
         };
     });
 
+    const handleFilterCategories = (e) => {
+        let value = e.target.value.toLowerCase();
+        let result = filterCategories?.filter((data) => {
+            return data.name.toLowerCase().search(value) != -1;
+        });
+        setListCategories(result);
+    };
+
     return (
         <section className="fadeIn">
             <div
@@ -184,14 +194,20 @@ const CategoryPage = () => {
                 }}
                 className="flex_between"
             >
-                <Button
-                    size="large"
-                    type="primary"
-                    onClick={onClickAddCategory}
-                    icon={<PlusOutlined />}
-                >
-                    Add new category
-                </Button>
+                <Space size={"large"}>
+                    <Button
+                        type="primary"
+                        onClick={onClickAddCategory}
+                        icon={<PlusOutlined />}
+                    >
+                        Add new category
+                    </Button>
+                    <Input
+                        size="large"
+                        placeholder="Search category..."
+                        onChange={handleFilterCategories}
+                    />
+                </Space>
             </div>
             <Table
                 dataSource={dataSource}
