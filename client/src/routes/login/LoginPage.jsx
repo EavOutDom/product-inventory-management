@@ -30,6 +30,7 @@ const LoginPage = () => {
                 navigator("/dashboard");
             }
         } catch (error) {
+            setLoadBtn(false);
             console.error(error.message);
         }
     };
