@@ -21,7 +21,7 @@ const LoginPage = () => {
         setLoadBtn(true);
         try {
             const res = await request.post("auth/login", value);
-            setLoadBtn(true);
+            setLoadBtn(false);
             if (res.error) {
                 message.error(res.message);
             } else {
