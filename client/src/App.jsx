@@ -7,6 +7,7 @@ import { BiCategory, BiChevronDown } from "react-icons/bi";
 import { AppContext } from "./context/appContext";
 import { IoMdLogOut } from "react-icons/io";
 import { BsPeopleFill } from "react-icons/bs";
+import { FaPeopleCarry } from "react-icons/fa";
 
 function getItem(label, key, icon, children) {
     return {
@@ -27,6 +28,11 @@ const items = [
         <Link to="/customer">Customer</Link>,
         "/customer",
         <BsPeopleFill />
+    ),
+    getItem(
+        <Link to="/supplier">Supplier</Link>,
+        "/supplier",
+        <FaPeopleCarry />
     ),
 ];
 

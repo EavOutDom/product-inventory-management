@@ -7,7 +7,7 @@ import { request } from "../../util/api";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { formatDateClient } from "./../../util/service";
 
-const Category = () => {
+const CategoryPage = () => {
     const [setTitleLayout] = useOutletContext();
     const { appDispatch } = useContext(AppContext);
     const [listCategories, setListCategories] = useState(null);
@@ -220,4 +220,4 @@ const Category = () => {
     );
 };
 
-export default Category;
+export default CategoryPage;
