@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -54,4 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("/user/createUser", [UserController::class, "createUser"]);
     Route::delete("/user/deleteUser/{id}", [UserController::class, "deleteUser"]);
     Route::put("/user/updateUser/{id}", [UserController::class, "updateUser"]);
+
+    Route::get("purchase/getListPurchaseProducts", [PurchaseController::class, "getListPurchaseProducts"]);
+    Route::post("purchase/createPurchaseProduct", [PurchaseController::class, "createPurchaseProduct"]);
 });
