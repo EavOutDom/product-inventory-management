@@ -51,7 +51,12 @@ const DashboardPage = () => {
                                     </h1>
                                     <p className={styles.card_name}>Products</p>
                                 </div>
-                                <AiOutlineShoppingCart size={40} />
+                                <div className={styles.icons_container}>
+                                    <AiOutlineShoppingCart
+                                        size={40}
+                                        color="#000"
+                                    />
+                                </div>
                             </div>
                         </Card>
                     </Link>
@@ -73,7 +78,9 @@ const DashboardPage = () => {
                                         Categories
                                     </p>
                                 </div>
-                                <BiCategory size={40} />
+                                <div className={styles.icons_container}>
+                                    <BiCategory size={40} color="#000" />
+                                </div>
                             </div>
                         </Card>
                     </Link>
@@ -95,7 +102,9 @@ const DashboardPage = () => {
                                         Customers
                                     </p>
                                 </div>
-                                <BsPeopleFill size={40} />
+                                <div className={styles.icons_container}>
+                                    <BsPeopleFill size={40} color="#000" />
+                                </div>
                             </div>
                         </Card>
                     </Link>
@@ -117,7 +126,9 @@ const DashboardPage = () => {
                                         Suppliers
                                     </p>
                                 </div>
-                                <FaPeopleCarry size={40} />
+                                <div className={styles.icons_container}>
+                                    <FaPeopleCarry size={40} color="#000" />
+                                </div>
                             </div>
                         </Card>
                     </Link>
@@ -137,7 +148,12 @@ const DashboardPage = () => {
                                     </h1>
                                     <p className={styles.card_name}>Users</p>
                                 </div>
-                                <RiUserSettingsLine size={40} />
+                                <div className={styles.icons_container}>
+                                    <RiUserSettingsLine
+                                        size={40}
+                                        color="#000"
+                                    />
+                                </div>
                             </div>
                         </Card>
                     </Link>
